@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Lobby</h3>
+<p>Character: {{ pc.name }} (HP: {{ pc.current_hp }}/{{ pc.max_hp }})</p>
+<form action="/start_battle" method="post">
+  <button class="btn btn-danger">Start Battle vs Goblin</button>
+</form>
+<p><a href="/leaderboard">Leaderboard</a> | <a href="/logout">Logout</a></p>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Welcome to Battle Arena RPG</h1>
+
+{% if current_user.is_authenticated %}
+    <p>
+        <a class="btn btn-primary" href="{{ url_for('game.lobby') }}">Enter Lobby</a>
+    </p>
+    <p>
+        <a class="btn btn-info" href="{{ url_for('extra.leaderboard') }}">Leaderboard</a>
+        <a class="btn btn-secondary" href="{{ url_for('auth.logout') }}">Logout</a>
+    </p>
+{% else %}
+    <p>
+        <a class="btn btn-success" href="{{ url_for('auth.login') }}">Login</a>
+        <a class="btn btn-info" href="{{ url_for('auth.register') }}">Register</a>
+    </p>
+{% endif %}
+
+{% endblock %}

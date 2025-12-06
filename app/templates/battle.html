@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Battle vs {{ battle.enemy.name }}</h3>
+
+<div class="row">
+  <div class="col-md-6">
+    <h5>Player</h5>
+    <p id="player_hp">HP: {{ battle.player.current_hp }} / {{ battle.player.max_hp }}</p>
+  </div>
+  <div class="col-md-6">
+    <h5>Enemy</h5>
+    <p id="enemy_hp">HP: {{ battle.enemy.current_hp }} / {{ battle.enemy.max_hp }}</p>
+  </div>
+</div>
+
+<div id="log" class="border p-2 my-2" style="height:200px; overflow:auto;">
+  {% for e in battle.log %}
+    <div>{{ e }}</div>
+  {% endfor %}
+</div>
+
+<div id="actions" class="mb-3">
+  <button class="btn btn-primary" onclick="doMove('attack')">Attack</button>
+  <button class="btn btn-secondary" onclick="doMove('defend')">Defend</button>
+</div>
+
+<div id="status"></div>
+
+<script>
+const battleId = "{{ battle_id }}";
+
+async function doMove(move) {
+  const resp = await fetch(`/battle/${battleId}/action`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({move})
+  });
+  const data = await resp.json();
+  if (data.error) {
+    document.getElementById('status').innerText = data.error;
+    return;
+  }
+  document.getElementById('player_hp').innerText = 'HP: ' + data.player_hp;
+  document.getElementById('enemy_hp').innerText = 'HP: ' + data.enemy_hp;
+  const log = document.getElementById('log');
+  data.log.forEach(ev => {
+    const div = document.createElement('div');
+    div.innerText = JSON.stringify(ev);
+    log.appendChild(div);
+  });
+  log.scrollTop = log.scrollHeight;
+  if (data.is_over) {
+    alert('Battle over! Winner: ' + data.winner);
+    window.location.href = '/lobby';
+  }
+}
+</script>
+{% endblock %}

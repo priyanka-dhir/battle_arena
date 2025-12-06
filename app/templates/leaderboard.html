@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Leaderboard</h3>
+<table class="table">
+  <thead><tr><th>Player</th><th>Wins</th><th>Losses</th></tr></thead>
+  <tbody>
+    {% for row in board %}
+      <tr><td>{{ row.username }}</td><td>{{ row.wins }}</td><td>{{ row.losses }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p><a href="/lobby">Back to Lobby</a></p>
+{% endblock %}
