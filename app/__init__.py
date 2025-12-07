@@ -15,14 +15,12 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
 
-    # Import blueprints
     from .auth_routes import auth_bp
     from .game_routes import game_bp
-    from .game_routes_extra import extra_bp  # leaderboard & extra endpoints
+    from .game_routes_extra import extra_bp 
 
-    # Register blueprints
     app.register_blueprint(auth_bp, url_prefix="/")
     app.register_blueprint(game_bp, url_prefix="/")
-    app.register_blueprint(extra_bp, url_prefix="/")  # make /leaderboard available
+    app.register_blueprint(extra_bp, url_prefix="/") 
 
     return app

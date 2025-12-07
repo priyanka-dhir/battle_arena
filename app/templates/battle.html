@@ -74,10 +74,8 @@ async function doMove(move) {
   logDiv.scrollTop = logDiv.scrollHeight;
 
   if (data.is_over) {
-    // Disable buttons
     document.querySelectorAll('#actions button').forEach(b => b.disabled = true);
 
-    // Add final battle summary to log
     const summary = document.createElement('div');
     summary.className = 'fw-bold mt-2';
     summary.innerText = `Battle over! Winner: ${data.winner}` +
@@ -86,7 +84,6 @@ async function doMove(move) {
     logDiv.appendChild(summary);
     logDiv.scrollTop = logDiv.scrollHeight;
 
-    // Optional alert as well
     alert(summary.innerText);
 
     setTimeout(() => window.location.href = '/lobby', 500);

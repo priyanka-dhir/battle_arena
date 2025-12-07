@@ -24,7 +24,6 @@
 <p>You don't have a character yet. <a href="{{ url_for('game.character') }}">Create one</a></p>
 {% endif %}
 
-<!-- Arena / Battle buttons -->
 <div class="mb-3">
   <a class="btn btn-primary me-2" href="{{ url_for('game.arena') }}">Enter Arena</a>
   <a class="btn btn-danger me-2" href="{{ url_for('game.battle_start', enemy='goblin') }}">Start Battle vs Goblin</a>

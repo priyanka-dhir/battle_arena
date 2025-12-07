@@ -13,8 +13,6 @@ class RandomAI(BaseAI):
 
 class HeuristicAI(BaseAI):
     def select_action(self, enemy, battle):
-        # If low HP, sometimes defend
         if enemy.current_hp < enemy.max_hp * 0.3 and random.random() < 0.6:
             return DefendAction()
-        # Prefer attacking
         return AttackAction()

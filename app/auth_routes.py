@@ -20,7 +20,6 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        # starter character
         pc = PlayerCharacter(
             name=f'{username}_hero',
             template='Warrior',

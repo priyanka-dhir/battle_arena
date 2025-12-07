@@ -1,4 +1,3 @@
-# optional extra endpoints to render leaderboard
 from flask import Blueprint, render_template
 from .game_routes_leaderboard import compute_leaderboard
 

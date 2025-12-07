@@ -13,10 +13,6 @@ class Battle:
 
         result = action.execute(actor, target, self)
         self.log.append(result)
-
-        # remove any temp defend after they've been used (if target has _temp_defend)
-        # Here we only remove when a character takes damage (handled in take_damage)
-        # switch turn
         self.turn = 'enemy' if self.turn == 'player' else 'player'
         return result
 

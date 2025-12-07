@@ -1,4 +1,3 @@
-# helper route to compute leaderboard (not a blueprint) - registered in game_bp via import in game_routes if desired
 from .models import db, MatchResult, User
 from flask import render_template
 

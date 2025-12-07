@@ -7,7 +7,7 @@ class Character(ABC):
         self.current_hp = hp
         self.attack = attack
         self.defense = defense
-        self.temp_defense = 0      # Added for Defend action
+        self.temp_defense = 0    
         self.level = level
 
     def is_alive(self):
