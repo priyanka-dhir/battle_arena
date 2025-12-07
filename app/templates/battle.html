@@ -2,29 +2,38 @@
 {% block content %}
 <h3>Battle vs {{ battle.enemy.name }}</h3>
 
-<div class="row">
+<div class="row mb-3">
   <div class="col-md-6">
     <h5>Player</h5>
     <p id="player_hp">HP: {{ battle.player.current_hp }} / {{ battle.player.max_hp }}</p>
+    <p>Atk: {{ battle.player.attack }}, Def: {{ battle.player.defense }}</p>
   </div>
   <div class="col-md-6">
     <h5>Enemy</h5>
     <p id="enemy_hp">HP: {{ battle.enemy.current_hp }} / {{ battle.enemy.max_hp }}</p>
+    <p>Atk: {{ battle.enemy.attack }}, Def: {{ battle.enemy.defense }}</p>
   </div>
 </div>
 
-<div id="log" class="border p-2 my-2" style="height:200px; overflow:auto;">
+<div id="log" class="border p-2 mb-3" style="height:200px; overflow-y:auto; background-color:#f9f9f9;">
   {% for e in battle.log %}
-    <div>{{ e }}</div>
+    {% if e.actor and e.text %}
+      <div class="{{ 'text-primary' if e.actor == battle.player.name else 'text-danger' }}">
+        <strong>{{ e.actor }}:</strong> {{ e.text }}
+      </div>
+    {% else %}
+      <div>{{ e }}</div>
+    {% endif %}
   {% endfor %}
 </div>
 
 <div id="actions" class="mb-3">
-  <button class="btn btn-primary" onclick="doMove('attack')">Attack</button>
-  <button class="btn btn-secondary" onclick="doMove('defend')">Defend</button>
+  <button class="btn btn-primary me-2" onclick="doMove('attack')">Attack</button>
+  <button class="btn btn-secondary me-2" onclick="doMove('defend')">Defend</button>
+  <button class="btn btn-success" onclick="doMove('heal')">Heal</button>
 </div>
 
-<div id="status"></div>
+<div id="status" class="mb-2"></div>
 
 <script>
 const battleId = "{{ battle_id }}";
@@ -35,23 +44,52 @@ async function doMove(move) {
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({move})
   });
+
+  if (!resp.ok) {
+    document.getElementById('status').innerText = 'Network error. Try again.';
+    return;
+  }
+
   const data = await resp.json();
   if (data.error) {
     document.getElementById('status').innerText = data.error;
     return;
   }
+
   document.getElementById('player_hp').innerText = 'HP: ' + data.player_hp;
   document.getElementById('enemy_hp').innerText = 'HP: ' + data.enemy_hp;
-  const log = document.getElementById('log');
+
+  const logDiv = document.getElementById('log');
   data.log.forEach(ev => {
     const div = document.createElement('div');
-    div.innerText = JSON.stringify(ev);
-    log.appendChild(div);
+    if (ev.actor && ev.text) {
+      div.innerHTML = `<strong>${ev.actor}:</strong> ${ev.text}`;
+      div.className = ev.actor === data.player_name ? 'text-primary' : 'text-danger';
+    } else {
+      div.innerText = ev;
+    }
+    logDiv.appendChild(div);
   });
-  log.scrollTop = log.scrollHeight;
+
+  logDiv.scrollTop = logDiv.scrollHeight;
+
   if (data.is_over) {
-    alert('Battle over! Winner: ' + data.winner);
-    window.location.href = '/lobby';
+    // Disable buttons
+    document.querySelectorAll('#actions button').forEach(b => b.disabled = true);
+
+    // Add final battle summary to log
+    const summary = document.createElement('div');
+    summary.className = 'fw-bold mt-2';
+    summary.innerText = `Battle over! Winner: ${data.winner}` +
+                        (data.xp_gained ? ` | XP gained: ${data.xp_gained}` : '') +
+                        (data.level_up ? ` | 🎉 Level Up! You are now level ${data.new_level}` : '');
+    logDiv.appendChild(summary);
+    logDiv.scrollTop = logDiv.scrollHeight;
+
+    // Optional alert as well
+    alert(summary.innerText);
+
+    setTimeout(() => window.location.href = '/lobby', 500);
   }
 }
 </script>

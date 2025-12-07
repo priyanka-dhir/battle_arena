@@ -1,9 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<h3>Lobby</h3>
-<p>Character: {{ pc.name }} (HP: {{ pc.current_hp }}/{{ pc.max_hp }})</p>
-<form action="/start_battle" method="post">
-  <button class="btn btn-danger">Start Battle vs Goblin</button>
-</form>
-<p><a href="/leaderboard">Leaderboard</a> | <a href="/logout">Logout</a></p>
+<h2>Lobby</h2>
+
+{% if pc %}
+<div class="card mb-3" style="width: 18rem;">
+  <div class="card-header">
+    {{ pc.name }} (Level {{ pc.level }})
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+      HP: {{ pc.current_hp }} / {{ pc.max_hp }} <br>
+      Atk: {{ pc.attack }}, Def: {{ pc.defense }} <br>
+    </p>
+    <p>XP: {{ pc.xp }} / {{ pc.level * 50 }}</p>
+    <div class="progress mb-2" style="height: 20px;">
+      <div class="progress-bar" role="progressbar" style="width: {{ (pc.xp / (pc.level * 50)) * 100 }}%;" aria-valuenow="{{ pc.xp }}" aria-valuemin="0" aria-valuemax="{{ pc.level * 50 }}">
+        {{ pc.xp }} XP
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<p>You don't have a character yet. <a href="{{ url_for('game.character') }}">Create one</a></p>
+{% endif %}
+
+<!-- Arena / Battle buttons -->
+<div class="mb-3">
+  <a class="btn btn-primary me-2" href="{{ url_for('game.arena') }}">Enter Arena</a>
+  <a class="btn btn-danger me-2" href="{{ url_for('game.battle_start', enemy='goblin') }}">Start Battle vs Goblin</a>
+  <a class="btn btn-secondary me-2" href="{{ url_for('game.character') }}">View Character</a>
+  <a class="btn btn-info me-2" href="{{ url_for('game.leaderboard') }}">Leaderboard</a>
+  <a class="btn btn-dark" href="{{ url_for('auth.logout') }}">Logout</a>
+</div>
 {% endblock %}

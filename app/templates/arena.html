@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Arena</h2>
+
+<p>Select an enemy to fight:</p>
+
+<h3>PvE Battles</h3>
+<div class="mb-3">
+    <a class="btn btn-primary me-2" href="{{ url_for('game.battle_start', enemy='goblin') }}">Fight Goblin</a>
+    <a class="btn btn-secondary me-2" href="{{ url_for('game.battle_start', enemy='orc') }}">Fight Orc</a>
+    <a class="btn btn-secondary" href="{{ url_for('game.battle_start', enemy='dragon') }}">Fight Dragon</a>
+</div>
+<p class="text-muted">Orc and Dragon may have higher difficulty.</p>
+
+<h3>PvP Battles</h3>
+<p>Coming soon...</p>
+
+<p><a class="btn btn-info" href="{{ url_for('game.lobby') }}">Back to Lobby</a></p>
+{% endblock %}

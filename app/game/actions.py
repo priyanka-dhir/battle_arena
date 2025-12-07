@@ -5,18 +5,38 @@ class Action(ABC):
     def execute(self, actor, target, battle):
         pass
 
-class AttackAction(Action):
-    def execute(self, actor, target, battle):
-        damage = actor.attack
-        dealt = target.take_damage(damage)
-        return {'type': 'attack', 'actor': actor.name, 'target': target.name, 'damage': dealt}
+class AttackAction:
+    def execute(self, attacker, defender, battle):
+        dmg = max(1, attacker.attack - defender.defense)
+        defender.current_hp -= dmg
+        return {
+            "actor": attacker.name,
+            "type": "attack",
+            "value": dmg,
+            "text": f"{attacker.name} deals {dmg} damage to {defender.name}!"
+        }
 
-class DefendAction(Action):
-    def execute(self, actor, target, battle):
-        # temporary defense buff: add 2 to defense for one enemy attack
-        actor.defense += 2
-        # mark buff so it can be removed after next hit
-        if not hasattr(actor, '_temp_defend'):
-            actor._temp_defend = 0
-        actor._temp_defend += 2
-        return {'type': 'defend', 'actor': actor.name}
+class DefendAction:
+    def execute(self, attacker, defender, battle):
+        attacker.temp_defense += 3
+        return {
+            "actor": attacker.name,
+            "type": "defend",
+            "value": 0,
+            "text": f"{attacker.name} braces for impact (+3 defense next hit)"
+        }
+
+class HealAction:
+    def __init__(self, heal_amount=10):
+        self.heal_amount = heal_amount
+
+    def execute(self, attacker, defender, battle):
+        heal = min(self.heal_amount, attacker.max_hp - attacker.current_hp)
+        attacker.current_hp += heal
+        return {
+            "actor": attacker.name,
+            "type": "heal",
+            "value": heal,
+            "text": f"{attacker.name} heals for {heal} HP!"
+        }
+

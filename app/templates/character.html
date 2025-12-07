@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Your Character</h2>
+
+<div class="card p-3">
+    <h3>{{ pc.name }}</h3>
+    <p><strong>Class:</strong> {{ pc.template }}</p>
+    <p><strong>Level:</strong> {{ pc.level }}</p>
+    <p><strong>XP:</strong> {{ pc.xp }}</p>
+
+    <p><strong>HP:</strong> {{ pc.current_hp }} / {{ pc.max_hp }}</p>
+    <p><strong>Attack:</strong> {{ pc.attack }}</p>
+    <p><strong>Defense:</strong> {{ pc.defense }}</p>
+</div>
+
+<p><a href="/lobby">Back to Lobby</a></p>
+{% endblock %}
